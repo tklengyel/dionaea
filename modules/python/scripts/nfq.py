@@ -91,7 +91,10 @@ class nfqmirrorc(connection):
 class nfqmirrord(connection):
 	def __init__(self, proto=None):
 		connection.__init__(self,proto)
+		conf = g_dionaea.config()['modules']['python']['nfq']
 		self.peer=None
+		self.mirror=int(conf['nfmirror'])
+
 
 	def handle_established(self):
 		self.processors()
@@ -101,7 +104,11 @@ class nfqmirrord(connection):
 		self._out.accounting.limit = 200*1024
 
 		if is_local_addr(self.remote.host) == False:
-			self.peer=nfqmirrorc(self)
+			if self.mirror == 1:
+				self.peer=nfqmirrorc(self)
+			else:
+				logger.debug("skipping nfq mirror connection")
+
 			# problem:
 			# the parent connection just got accepted
 			# we are in the established callback for this connection

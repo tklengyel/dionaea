@@ -425,6 +425,8 @@ modules = {
 			 */
 
 			nfaction = "0" // DROP
+			nfmirror = "1" // 1: Mirror entire incoming connections back to the attacker
+						   // 0: Only do TCP handshake
 
 			throttle = {
 				window = "30"
