@@ -533,6 +533,7 @@ int main (int argc, char *argv[])
 
 	// logging 
 	d->logging = g_malloc0(sizeof(struct logging));
+	g_mutex_init(&d->logging->lock);
 
 
 	// no daemon logs to stdout by default
@@ -679,14 +680,6 @@ opt->stdOUT.filter);
 	ev_io_start(g_dionaea->loop, &d->dns->io_in);
 	ev_timer_init(&d->dns->dns_timeout, udns_timeout_cb, 0., 0.);
 	g_message("udns version %s",  UDNS_VERSION);
-
-
-	// glib thread init
-	if( !g_thread_supported () )
-		g_thread_init (NULL);
-
-	// logging continued ...
-	d->logging->lock = g_mutex_new();
 
 	// incident handlers
 	d->ihandlers = g_malloc0(sizeof(struct ihandlers));

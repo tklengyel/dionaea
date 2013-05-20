@@ -105,7 +105,7 @@ void emulate(struct emu_config *conf, struct connection *con, void *data, unsign
 	struct emu *e = ctx->emu;
 	struct emu_cpu *cpu = emu_cpu_get(ctx->emu);
 	ctx->env->userdata = ctx;
-	ctx->mutex = g_mutex_new();
+	g_mutex_init(ctx->mutex);
 	ctx->serial = 67;
 
 	emu_env_w32_load_dll(env->env.win,"ws2_32.dll");
@@ -216,7 +216,7 @@ void emulate_ctx_free(void *data)
 
 	emu_free(ctx->emu);
 	emu_env_free(ctx->env);
-	g_mutex_free(ctx->mutex);
+	g_mutex_clear(ctx->mutex);
 	if( ctx->ctxcon != NULL )
 		connection_unref(ctx->ctxcon);
 	g_free(ctx);
